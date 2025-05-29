@@ -1,34 +1,25 @@
-# Use a pipeline as a high-level helper
-from transformers import AutoTokenizer, AutoModelForCausalLM ,MistralForCausalLM, pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, MistralForCausalLM, pipeline
 
-model_name = "mistralai/Mistral-7B-Instruct-v0.3"
+model_name = "microsoft/phi-2"
+#mistralai/Mistral-7B-Instruct-v0.3
 token = "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"
 
-pipe = pipeline("text-generation", model=model_name, use_auth_token=token)
+# Load tokenizer and model with the token for authentication
+tokenizer = AutoTokenizer.from_pretrained(model_name, use_auth_token=token)
+model = AutoModelForCausalLM.from_pretrained("microsoft/phi-2")
+
+# Create the pipeline with model and tokenizer objects (no use_auth_token here)
+pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
+
+# If you want to test simple prompt generation:
+prompt = (
+    "You are a helpful assistant. Respond to the user's questions in plain English only. "
+    "Do not include code or technical syntax in your responses.\n\n"
+    "respond formally to the user's question.\n"
+)
+output = pipe(prompt, max_length=100, truncation=True)
 
 
-messages = [
-    {"role": "user", "content": "Who are you?"},
-]
-pipe(messages)
-
-# Load model directly
-
-
-# tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.3")
-# model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.3")
-
-model = MistralForCausalLM.from_pretrained(model_name)
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-
-#Generate text
-generator = pipeline('text-generation', model=model_name, tokenizer=tokenizer)
-
-prompt = "Hey, are you conscious? Can you talk to me?"
-inputs = tokenizer(prompt, return_tensors="pt")
-
-# Generate
-generate_text= generator(prompt,max_length = 50)
-# tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
-print(generate_text[0]['generated_text'])
+prompt = input("Prompt: ")
+output = pipe(prompt, max_length=100, truncation=True)
+print(output[0]['generated_text'])
