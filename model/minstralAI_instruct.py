@@ -1,9 +1,11 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM, MistralForCausalLM, pipeline
+from datasets import load_dataset 
 
 model_name = "microsoft/phi-2"
 #mistralai/Mistral-7B-Instruct-v0.3
 token = "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"
 
+dataset= load_dataset("multi_woz_v22")
 # Load tokenizer and model with the token for authentication
 tokenizer = AutoTokenizer.from_pretrained(model_name, use_auth_token=token)
 model = AutoModelForCausalLM.from_pretrained("microsoft/phi-2")
