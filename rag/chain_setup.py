@@ -17,6 +17,6 @@ prompt = ChatPromptTemplate.from_template(template)
 
 chain = prompt | model
 
-result = chain.invoke({"list": [], "question": "What is the weather like today and where am I?"})
+result = chain.invoke({"list": [], "question": "What is the best time to workout?"})
 
 print(result)
